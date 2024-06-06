@@ -1,62 +1,41 @@
+//! Promise task 3 is about fetch the data from the Rest Countries api ("https://restcountries.com/v3.1/all") and
+//! displaying Country Name, Region, Population, Capital, Flag,Image by using Promise and Fetch.
 
-// Fetch the data from the API
-fetch("https://api.disneyapi.dev/character")
-  .then((response) => response.json())
-  .then((ele) => {
-    const tempData = ele.data;
-    console.log(tempData);
-    // Get the container element
-    const container = document.getElementById("container");
-    // Loop through the fetched data
-    tempData.forEach((dataItem) => {
-      console.log("Inside loop:", dataItem);
-    
-    // Create a new card element
-    const card = document.createElement("div");
-    const image = document.createElement("img");
-    const name1 = document.createElement("h5");
-    const cardBody = document.createElement("div");
-    const characterId = document.createElement("h5");
-    const films = document.createElement("h5");
-    const tvShows = document.createElement("h5");
-    const createdAt = document.createElement("h5");  
+//! The div tag is slected by getElementsByClassName
+const container = document.getElementsByClassName("container")[0];
 
+function countryDetails() {
+  const url = "https://restcountries.com/v3.1/all";
 
-      card.classList.add("card-loop", "card","m-4", "bg-info");
-      card.style.width = "18rem";
+  //!Fetch and Promise
+  fetch(url)
+    .then((data) => data.json())
+    .then((countries) => {
+      console.log(countries);
 
-      image.classList.add("image", "card-img-top","py-4","rounded-5");
-      image.src = dataItem.imageUrl;
-      image.alt = "Country Flag";
+      //! forEach loop is used to map data
+      countries.forEach((country) => {
+        const division = document.createElement("div");
+        division.setAttribute("class", "row");
+        division.innerHTML = `<div class="col-sm-6 col-md-4 col-lg-4 col-xl-4">
+                                      <div class="card h-100">
+                                          <div class="card-header">${country.name.common}</div>
+                                          <img src="${country.flags?.png}" class="card-img-top">
+                                          <div class="card-body">
+                                              <div class="card-text">Region: ${country.region}</div>
+                                              <div class="card-text">Native Name: ${country.name.nativeName?.eng?.official}</div>
+                                              <div class="card-text">Population: ${country.population}</div>
+                                              <div class="card-text">Capital: ${country.capital}</div>
+                                              <div class="card-text">Flag: ${country.flags?.png}</div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <br />`;
+        container.appendChild(division);
+      });
+    })
+    .catch((error) => console.log(error));
+}
 
-      name1.classList.add("name", "card-title","text-center","fw-bolder");
-      name1.textContent = `Name: ${dataItem.name}`;
-
-      cardBody.classList.add("card-body");
-
-      characterId.classList.add("id", "card-text","text-center","fw-bolder");
-      characterId.textContent = `ID: ${dataItem._id}`;
-
-      films.classList.add("flim", "card-text","text-center","fw-bolder");
-      films.textContent = `Film: ${dataItem.films}`;
-
-      tvShows.classList.add("tv-show", "card-text","text-center","fw-bolder");
-      tvShows.textContent = `TV Shows: ${dataItem.tvShows.join(", ")}`;
-
-      createdAt.classList.add("create", "card-text","text-center","fw-bolder");
-      createdAt.textContent = `CreatedAt: ${dataItem.createdAt}`;
-
-      // Append elements to card and card body
-      card.appendChild(image);
-      card.appendChild(name1);
-      cardBody.appendChild(characterId);
-      cardBody.appendChild(films);
-      cardBody.appendChild(tvShows);
-      cardBody.appendChild(createdAt);
-      card.appendChild(cardBody);
-
-      // Append the card to the container
-      container.appendChild(card);
-    });
-  })
-  .catch((error) => console.error("Error fetching data:", error));
+//!Function call
+countryDetails();
