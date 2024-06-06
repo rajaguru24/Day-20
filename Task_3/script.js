@@ -1,88 +1,62 @@
-// function to get the country name from api
-function getCountryName() {
-  let url = "https://restcountries.com/v3.1/all";
-  fetch(url)
-    .then((response) => {
-      if (response.status === 200) {
-        return response.json();
-      }
-    })
-    .then((val) => {
-      displayData(val);
-    })
-    .catch((err) => {
-      console.log(err);
+
+// Fetch the data from the API
+fetch("https://api.disneyapi.dev/character")
+  .then((response) => response.json())
+  .then((ele) => {
+    const tempData = ele.data;
+    console.log(tempData);
+    // Get the container element
+    const container = document.getElementById("container");
+    // Loop through the fetched data
+    tempData.forEach((dataItem) => {
+      console.log("Inside loop:", dataItem);
+    
+    // Create a new card element
+    const card = document.createElement("div");
+    const image = document.createElement("img");
+    const name1 = document.createElement("h5");
+    const cardBody = document.createElement("div");
+    const characterId = document.createElement("h5");
+    const films = document.createElement("h5");
+    const tvShows = document.createElement("h5");
+    const createdAt = document.createElement("h5");  
+
+
+      card.classList.add("card-loop", "card","m-4", "bg-info");
+      card.style.width = "18rem";
+
+      image.classList.add("image", "card-img-top","py-4","rounded-5");
+      image.src = dataItem.imageUrl;
+      image.alt = "Country Flag";
+
+      name1.classList.add("name", "card-title","text-center","fw-bolder");
+      name1.textContent = `Name: ${dataItem.name}`;
+
+      cardBody.classList.add("card-body");
+
+      characterId.classList.add("id", "card-text","text-center","fw-bolder");
+      characterId.textContent = `ID: ${dataItem._id}`;
+
+      films.classList.add("flim", "card-text","text-center","fw-bolder");
+      films.textContent = `Film: ${dataItem.films}`;
+
+      tvShows.classList.add("tv-show", "card-text","text-center","fw-bolder");
+      tvShows.textContent = `TV Shows: ${dataItem.tvShows.join(", ")}`;
+
+      createdAt.classList.add("create", "card-text","text-center","fw-bolder");
+      createdAt.textContent = `CreatedAt: ${dataItem.createdAt}`;
+
+      // Append elements to card and card body
+      card.appendChild(image);
+      card.appendChild(name1);
+      cardBody.appendChild(characterId);
+      cardBody.appendChild(films);
+      cardBody.appendChild(tvShows);
+      cardBody.appendChild(createdAt);
+      card.appendChild(cardBody);
+
+      // Append the card to the container
+      container.appendChild(card);
     });
-
-//   function to display the country list from response
-  function displayData(response) {
-    response.forEach((element) => {
-      let display = document.getElementsByClassName("country")[0];
-
-      let data = `<div class="card bg-light mt-5 mb-5">
-    <option class="countryList">${element.name.common}</option></div>
-    `;
-
-      display.insertAdjacentHTML("beforeend", data);
-    });
-
-    getValue(response);
-  }
-}
-
-getCountryName();
-
-// function to get the value from dropdown
-function getValue(response) {
-  const countryDropdown = document.getElementsByClassName("country")[0];
-  let buttonSubmit = document.getElementsByClassName("btn-primary")[0];
-
-  buttonSubmit.addEventListener("click", () => {
-    const selectedCountry = countryDropdown.value;
-
-    getlatLon(response, selectedCountry);
-  });
-}
-
-// function to get the lan and lon value
-function getlatLon(response, selectedCountry) {
-  for (i of response) {
-    if (i.name.common === selectedCountry) {
-      let lat = i.latlng[0];
-      let lon = i.latlng[1];
-      weatherData(lat, lon, selectedCountry);
-    }
-  }
-}
-
-// function to get the weather data from the api
-function weatherData(lat, lon, selectedCountry) {
-  fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=80836a1de1d836417c5982e04efbdf5b`
-  )
-    .then((response) => {
-      if (response.status === 200) {
-        return response.json();
-      }
-    })
-    .then((val) => {
-      displayWeather(val, selectedCountry);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
-
-// function to displayWeather in the bootstrap card
-function displayWeather(data, selectedCountry) {
-  let weatherCard = document.getElementsByClassName("container")[0];
-
-  const temperature = (data.main.temp - 273.15).toFixed(2);
-  const weatherDescription = data.weather[0].description;
-  const humidity = data.main.humidity;
-  weatherCard.innerHTML = `<div" class="card bg-light mt-4 text-white text-center border border-dark" style="width: 18rem;"><div class=" card-header bg-dark p-2">${selectedCountry}</div>
-        <div class="card-body">
-          <p class="card-text bg-info p-2 text-white">Weather : ${weatherDescription}</p>
-          <p class="card-text bg-info p-2 text-white">Temperature : ${temperature} (in celcius)</p>
-          <p class="card-text bg-info p-2 text-white">Humidity : ${humidity} %</p>`;
-}
+  })
+  .catch((error) => console.error("Error fetching data:", error));
