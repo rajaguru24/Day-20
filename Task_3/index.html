@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather</title>
+    <!-- Include Bootstrap CSS link -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./style.css"
+    />
+  </head>
+  <body>
+    <div class="container-sm mt-3 bg-light border border-dark text-center">
+      <h3 class="pt-2">COUNTRY WEATHER</h3>
+      <br />
+      <!-- Include Bootstrap and custom JavaScript -->
+      <h5>Select a country in below Dropdown</h5>
+      <br />
+      <h5>Click confirm to display the selected country weather</h5>
+      <br />
+      <div class="p-sm-3 py-2 form-group">
+        <label for="country">Select a Country:</label>
+
+        <select class="country form-control" name="country" ></select
+        ><br>
+        <button class="btn btn-primary" type="submit">Confirm</button>
+        <div class="container d-flex justify-content-center"></div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
