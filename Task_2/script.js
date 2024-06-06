@@ -1,57 +1,56 @@
-// Fetching the data from the API
-fetch("https://api.disneyapi.dev/character")
-  .then((response) => response.json()).then((e) => {
-    const tyData = e.data;
-    console.log(tyData);
-    
-    const container = document.getElementById("container")
-    tyData.forEach((object) => {
-      console.log("res", object);    
-    
-    const card = document.createElement("div");
-    card.classList.add("card-loop", "card", "mx-5", "bg-success","text-light");
-     card.style.width = "25rem";
+// function to get the entered value from search box
+function getValue() {
+  let getWord = document.getElementsByClassName("form-control")[0];
+  let inputWord = getWord.value.toLowerCase();
+  fetchData(inputWord);
+}
 
-    const image = document.createElement("img");
-    image.classList.add("image", "card-img-top","py-4");
-      image.src = object.imageUrl;
-      image.alt = "name";
-      card.append(image);      
-
-      const name1 = document.createElement("h4");
-      name1.classList.add("name", "card-title","text-center","text-uppercase","fw-bold","fst-italic",);
-      name1.textContent = `Name: ${object.name}`;
-      card.append(name1);
-
-    const cardBody = document.createElement("div");
-    cardBody.classList.add("card-body");
-      card.append(cardBody);
-
-    const characterId = document.createElement("h4");
-    characterId.classList.add("id", "card-text","text-center","fst-italic");
-      characterId.textContent = `ID: ${object._id}`;
-      cardBody.append(characterId);      
-
-    const films = document.createElement("h4");
-    films.classList.add("flim", "card-text","text-center","fst-italic");
-    films.textContent = `Film: ${object.films}`;
-      cardBody.append(films);    
-
-    const tvShows = document.createElement("h4");
-    tvShows.classList.add("tv-show", "card-text","text-center","fst-italic");
-    tvShows.textContent = `TV Shows: ${object.tvShows.join(", ")}`;
-      cardBody.append(tvShows);
-
-    const createdAt = document.createElement("h4"); 
-    createdAt.classList.add("create", "card-text","text-center","fst-italic");
-    createdAt.textContent = `CreatedAt: ${object.createdAt}`;
-      cardBody.append(createdAt);
-
-      const updatedAt = document.createElement("h4"); 
-      updatedAt.classList.add("create", "card-text","text-center","fst-italic");
-      updatedAt.textContent = `updatedAt: ${object.updatedAt}`;
-      cardBody.append(updatedAt);
-      container.append(card);
+// function to retrieve data from api
+function fetchData(input) {
+  fetch(`https://api-thirukkural.vercel.app/api?num=${input}`)
+    .then((data) => {
+      if (data.status === 200) {
+        return data.json();
+      }
+    })
+    .then((response) => {
+      displayData(response);
+      console.log(response.sect_tam);
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  })
-  .catch((error) => console.log(error));
+}
+
+// function to display the data from the recieved response
+function displayData(response) {
+  let containerData = document.getElementsByClassName("container")[0];
+  containerData.innerHTML = "";
+
+  let cardData = `
+  <div class=" card-header bg-dark p-2 text-center text-white" id="countryName"><h3>திருக்குறள்</h3></div>
+    <div class = "border border-dark p-3" >
+    <h4><b>குறள் எண் : </b>${response.number}</h4><br>
+    <h4><b>பால் : </b>${response.sect_tam}</h4><br>
+    <h4><b>அதிகாரம் : </b>${response.chap_tam}</h4><br>
+    <div><h4><b>குறள் : </b></h4><p><h4><b>"${response.line1}</b></h4>
+    <h4><b>${response.line2}"</b></h4></p></div><br>
+    <div><h4><b>விளக்கம் :</b></h4><p><h4>${response.tam_exp}</h4></p></div></div><br><br><br>
+    
+   
+    <div class=" card-header bg-dark p-2 text-center text-white" id="countryName"><h3>Thirukural</h3></div>
+    <div class = "border border-dark p-3" >
+    <h4><b>Kural No : </b>${response.number}</h4><br>
+    <h4><b>Section : </b>${response.sect_eng}</h4><br>
+    <h4><b>Chapter : </b>${response.chap_eng}</h4><br>
+    <div><h4><b>Kural : </b></h4><p><h4><b>${response.eng}</b></h4>
+    </p></div><br>
+    <div><h4><b>Explanation :</b></h4><p><h4>${response.eng_exp}</h4></p></div></div>  
+    `;
+
+  containerData.insertAdjacentHTML("beforeend", cardData);
+}
+
+// addEventListener for button to invoke the getValue function
+let button = document.getElementsByClassName("btn-outline-primary")[0];
+button.addEventListener("click", getValue);
