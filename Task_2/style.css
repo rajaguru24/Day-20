@@ -1,0 +1,12 @@
+@media(min-width:500px){
+    .container-sm{
+        max-width: 28rem;
+   }}
+
+   .click{
+    color: red;
+   }
+
+   .card{
+    border: 1px solid;
+   }

@@ -1,4 +1,5 @@
-// function to get the entered value from search box
+// getValue function to get value from input
+
 function getValue() {
   let getWord = document.getElementsByClassName("form-control")[0];
   let inputWord = getWord.value.toLowerCase();
@@ -6,8 +7,9 @@ function getValue() {
 }
 
 // function to retrieve data from api
+
 function fetchData(input) {
-  fetch(`https://api-thirukkural.vercel.app/api?num=${input}`)
+  fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${input}`)
     .then((data) => {
       if (data.status === 200) {
         return data.json();
@@ -15,42 +17,35 @@ function fetchData(input) {
     })
     .then((response) => {
       displayData(response);
-      console.log(response.sect_tam);
     })
     .catch((err) => {
       console.log(err);
     });
 }
 
-// function to display the data from the recieved response
+// function displayData for displaying the data retrieved from api
+
 function displayData(response) {
   let containerData = document.getElementsByClassName("container")[0];
   containerData.innerHTML = "";
 
   let cardData = `
-  <div class=" card-header bg-dark p-2 text-center text-white" id="countryName"><h3>திருக்குறள்</h3></div>
-    <div class = "border border-dark p-3" >
-    <h4><b>குறள் எண் : </b>${response.number}</h4><br>
-    <h4><b>பால் : </b>${response.sect_tam}</h4><br>
-    <h4><b>அதிகாரம் : </b>${response.chap_tam}</h4><br>
-    <div><h4><b>குறள் : </b></h4><p><h4><b>"${response.line1}</b></h4>
-    <h4><b>${response.line2}"</b></h4></p></div><br>
-    <div><h4><b>விளக்கம் :</b></h4><p><h4>${response.tam_exp}</h4></p></div></div><br><br><br>
     
-   
-    <div class=" card-header bg-dark p-2 text-center text-white" id="countryName"><h3>Thirukural</h3></div>
-    <div class = "border border-dark p-3" >
-    <h4><b>Kural No : </b>${response.number}</h4><br>
-    <h4><b>Section : </b>${response.sect_eng}</h4><br>
-    <h4><b>Chapter : </b>${response.chap_eng}</h4><br>
-    <div><h4><b>Kural : </b></h4><p><h4><b>${response.eng}</b></h4>
-    </p></div><br>
-    <div><h4><b>Explanation :</b></h4><p><h4>${response.eng_exp}</h4></p></div></div>  
+    <h2>Word : ${response[0].word}</h2>
+    <p class="mt-3"><b>Meaning</b>: ${response[0].meanings[0].definitions[0].definition}</p>
+    <p><b>Part of speech</b>: ${response[0].meanings[0].partOfSpeech}</p>
+<div class="mt-3"><h5>Audio : </h5>
+    <audio controls class="mr-5 pr-5">
+<source src="${response[0].phonetics[0].audio}" type="audio/ogg">
+Your browser does not support the audio element.
+</audio></div><br>
+<div class="bg-info mt-3 text-center p-2 ml-5"><a href="${response[0].sourceUrls}" target="_blank"><span class="click">Click here </span></a>to learn more</div></div>
+    
     `;
 
   containerData.insertAdjacentHTML("beforeend", cardData);
 }
 
-// addEventListener for button to invoke the getValue function
-let button = document.getElementsByClassName("btn-outline-primary")[0];
-button.addEventListener("click", getValue);
+// addEventListener for click event of button
+let buttonClick = document.getElementsByClassName("btn-outline-primary")[0];
+buttonClick.addEventListener("click", getValue);
